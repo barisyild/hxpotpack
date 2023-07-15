@@ -3,10 +3,10 @@
   "url" : "https://github.com/barisyild/hxpotpack/",
   "license": "MIT",
   "tags": ["algorithms", "sprites", "packing", "port"],
-  "description": "This library is for rendering textures at runtime.",
+  "description": "This library is for packing textures at runtime.",
   "version": "1.0.0",
   "classPath": "src/",
-  "releasenote": "Initial release, everything is working correctly.",
+  "releasenote": "Fix description",
   "contributors": ["barisyild"],
   "dependencies": {}
 }
