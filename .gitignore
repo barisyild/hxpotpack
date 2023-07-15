@@ -1,0 +1,8 @@
+/src/PotpackBenchmark.hx
+/src/PotpackDemo.hx
+*.iml
+.idea
+Export
+project.xml
+out
+release.bat
