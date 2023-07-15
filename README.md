@@ -54,7 +54,10 @@ Compatible with all haxe projects.
 
 There is an additional compatibility feature for OpenFL, you can use OpenFL Rectangles.
 
-## Install
+## Install Release Version
+Install with haxelib: `haxelib install hxpotpack`
+
+## Install Development Version
 Install with haxelib: `haxelib git hxpotpack https://github.com/barisyild/hxpotpack.git`
 
 ### Original project created by [Mapbox](https://github.com/mapbox)
