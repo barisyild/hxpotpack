@@ -32,7 +32,7 @@ class Potpack
 
 
         #if js
-        final spaces:Vector<{x:Float, y:Float, width:Float, height:Float}> = new Vector(boxes.length);
+        final spaces:Vector<{x:Float, y:Float, width:Float, height:Float}> = new Vector(tmpBoxes.length);
         spaces.set(0, {x: 0, y: 0, width: startWidth, height: 2147483647});
         #else
         final spaces:Vector<PotpackRectangle> = new Vector<PotpackRectangle>(tmpBoxes.length);
@@ -49,7 +49,7 @@ class Potpack
             var i:Int = spacesLength - 1;
             while (i >= 0)
             {
-                final space = spaces[i];
+                final space:#if js {x:Float, y:Float, width:Float, height:Float} #else PotpackRectangle #end = spaces[i];
 
                 // look for empty spaces that can accommodate the current box
                 if (box.width > space.width || box.height > space.height)
@@ -72,10 +72,11 @@ class Potpack
 
                 if (box.width == space.width && box.height == space.height) {
                     // space matches the box exactly; remove it
-                    final last = spaces.get(spacesLength--);
+                    final lastSpace:#if js {x:Float, y:Float, width:Float, height:Float} #else PotpackRectangle #end = spaces.get(spacesLength - 1);
+                    spacesLength--;
 
                     if (i < spacesLength)
-                        spaces.set(i, last);
+                        spaces.set(i, lastSpace);
 
                 } else if (box.height == space.height) {
                     // space matches the box height; update it accordingly
@@ -104,20 +105,21 @@ class Potpack
                     // |___________________|
 
                     #if js
-                        spaces.set(spacesLength++, {
+                        spaces.set(spacesLength, {
                             x: space.x + box.width,
                             y: space.y,
                             width: space.width - box.width,
                             height: box.height
                         });
                     #else
-                        spaces.set(spacesLength++, new PotpackRectangle(
+                        spaces.set(spacesLength, new PotpackRectangle(
                             space.x + box.width,
                             space.y,
                             space.width - box.width,
                             box.height
                         ));
                     #end
+                    spacesLength++;
 
                     space.y += box.height;
                     space.height -= box.height;
