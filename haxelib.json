@@ -4,9 +4,9 @@
   "license": "MIT",
   "tags": ["algorithms", "sprites", "packing", "port"],
   "description": "This library is for sprite packing algorithm at runtime.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "classPath": "src/",
-  "releasenote": "Bug fixes",
+  "releasenote": "Padding support added.",
   "contributors": ["barisyild"],
   "dependencies": {}
 }
