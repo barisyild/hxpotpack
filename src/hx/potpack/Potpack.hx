@@ -16,7 +16,13 @@ class Potpack
         var area:Int = 0;
         var maxWidth:Int = 0;
 
-        var tmpBoxes:Vector<PotpackRectangle> = keepOrder ? boxes.copy() : boxes;
+        var tmpBoxes:#if (neko || cs || java || eval) Array<PotpackRectangle> #else Vector<PotpackRectangle> #end;
+
+        #if (neko || cs || java || eval)
+        tmpBoxes = boxes.toArray();
+        #else
+        tmpBoxes = keepOrder ? boxes.copy() : boxes;
+        #end
 
         for (box in tmpBoxes) {
             area += cast (box.width + 2 * padding) * (box.height + 2 * padding);
@@ -24,7 +30,7 @@ class Potpack
         }
 
         // sort the boxes for insertion by height, descending
-        tmpBoxes.sort((a, b) -> cast (b.height + 2 * padding) - cast (a.height + 2 * padding));
+        tmpBoxes.sort((a, b) -> Std.int((b.height + 2 * padding) - (a.height + 2 * padding)));
 
         // aim for a squarish resulting container,
         // slightly adjusted for sub-100% space utilization
@@ -126,6 +132,17 @@ class Potpack
                 break;
             }
         }
+
+        #if (neko || cs || java || eval)
+        if(!keepOrder)
+        {
+            // Sync the original array with the sorted array.
+            for(i in 0...boxes.length)
+            {
+                boxes[i] = tmpBoxes[i];
+            }
+        }
+        #end
 
         return {
             width: width,
