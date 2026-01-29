@@ -3,20 +3,20 @@ package hx.potpack;
 // Original Source Code: https://github.com/mapbox/potpack/blob/main/index.js
 // Converted to Haxe by: barisyild
 import hx.potpack.geom.PotpackRectangle;
-import haxe.ds.Vector;
+import hx.potpack.geom.PotpackVector;
 
 class Potpack
 {
     // Ordering feature has been added to the original source code as an extra.
     // If you want to keep the order of the boxes, you can use this feature.
-    // Also Vector has been used instead of Array for performance reasons. (Fixed Array)
-    public static function pack(boxes:Vector<PotpackRectangle>, keepOrder:Bool = true, padding:Int = 0):{width:Int, height:Int, size:Int, fill:Float}
+    // Also PotpackVector has been used instead of Array for performance reasons. (Fixed Array)
+    public static function pack(boxes:PotpackVector<PotpackRectangle>, keepOrder:Bool = true, padding:Int = 0):{width:Int, height:Int, size:Int, fill:Float}
     {
         // calculate total box area and maximum box width
         var area:Int = 0;
         var maxWidth:Int = 0;
 
-        var tmpBoxes:#if (neko || cs || java || eval) Array<PotpackRectangle> #else Vector<PotpackRectangle> #end;
+        var tmpBoxes:#if (neko || cs || java || eval) Array<PotpackRectangle> #else PotpackVector<PotpackRectangle> #end;
 
         #if (neko || cs || java || eval)
         tmpBoxes = boxes.toArray();
@@ -37,10 +37,10 @@ class Potpack
         final startWidth:Int = cast Math.max(Math.ceil(Math.sqrt(area / 0.95)), maxWidth);
 
         #if js
-        final spaces:Vector<{x:Float, y:Float, width:Float, height:Float}> = new Vector(tmpBoxes.length);
+        final spaces:PotpackVector<{x:Float, y:Float, width:Float, height:Float}> = new PotpackVector(tmpBoxes.length);
         spaces.set(0, {x: 0, y: 0, width: startWidth, height: 2147483647});
         #else
-        final spaces:Vector<PotpackRectangle> = new Vector<PotpackRectangle>(tmpBoxes.length);
+        final spaces:PotpackVector<PotpackRectangle> = new PotpackVector<PotpackRectangle>(tmpBoxes.length);
         spaces.set(0, new PotpackRectangle(0, 0, startWidth, 2147483647));
         #end
 
