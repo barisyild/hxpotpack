@@ -24,17 +24,27 @@ class Potpack
         }
 
         // sort the boxes for insertion by height, descending
+        // haxe.ds.Vector.sort() throws "not yet supported" on java/jvm/cs/neko/eval, so sort an
+        // Array copy and write it back on those targets.
+        #if (java || cs || neko || eval)
+        final sortedBoxes:Array<PotpackRectangle> = tmpBoxes.toArray();
+        sortedBoxes.sort((a, b) -> cast (b.height + 2 * padding) - cast (a.height + 2 * padding));
+        for (sortedIndex in 0...sortedBoxes.length) tmpBoxes.set(sortedIndex, sortedBoxes[sortedIndex]);
+        #else
         tmpBoxes.sort((a, b) -> cast (b.height + 2 * padding) - cast (a.height + 2 * padding));
+        #end
 
         // aim for a squarish resulting container,
         // slightly adjusted for sub-100% space utilization
         final startWidth:Int = cast Math.max(Math.ceil(Math.sqrt(area / 0.95)), maxWidth);
 
         #if js
-        final spaces:Vector<{x:Float, y:Float, width:Float, height:Float}> = new Vector(tmpBoxes.length);
+        final spaces:Vector<{x:Float, y:Float, width:Float, height:Float}> = new Vector(tmpBoxes.length + 1);
         spaces.set(0, {x: 0, y: 0, width: startWidth, height: 2147483647});
         #else
-        final spaces:Vector<PotpackRectangle> = new Vector<PotpackRectangle>(tmpBoxes.length);
+        // +1: each box can split a space into two (net +1), so up to boxes.length+1 spaces can exist.
+        // On jvm Vector is a fixed native array, so an exact-size alloc overflows (AIOOBE).
+        final spaces:Vector<PotpackRectangle> = new Vector<PotpackRectangle>(tmpBoxes.length + 1);
         spaces.set(0, new PotpackRectangle(0, 0, startWidth, 2147483647));
         #end
 
