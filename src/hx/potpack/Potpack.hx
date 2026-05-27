@@ -19,7 +19,8 @@ class Potpack
         var tmpBoxes:#if (neko || cs || java || eval) Array<PotpackRectangle> #else PotpackVector<PotpackRectangle> #end;
 
         #if (neko || cs || java || eval)
-        tmpBoxes = boxes.toArray();
+        // openfl.Vector (PotpackVector on jvm+openfl) has no toArray(); iterate to build the Array.
+        tmpBoxes = [for (box in boxes) box];
         #else
         tmpBoxes = keepOrder ? boxes.copy() : boxes;
         #end
